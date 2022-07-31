@@ -8,7 +8,7 @@ struct Player create_player() {
   player.dir = (Vector2){0.05, 0};
   player.mass = 10;
 
-  player.mo.pos = (Vector2){0, -300};
+  player.mo.pos = (Vector2){0, -500};
   player.mo.mass = 5;
 
   return player;
