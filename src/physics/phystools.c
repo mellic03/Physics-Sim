@@ -39,10 +39,10 @@ int push(MassObject obj, MassObject arr[]) {
 void updateMassObjects(MassObject arr[]) {
   for (int i=0; i<MAX_MASS_OBJECTS; i++) {
     for (int j=0; j<MAX_MASS_OBJECTS; j++) {
-      if (i!=j && arr[i].can_move==1 && arr[j].can_move==1) {
+      if (i!=j && arr[i].mass!=0 && arr[j].mass!=0) {
 
         double dist = Vector2Distance(arr[i].pos, arr[j].pos);
-        
+
         if (dist <= arr[i].radius + arr[j].radius) {
           // Momentum before collision == momentum after collision
           // Momentum = Mass * Velocity
@@ -54,37 +54,29 @@ void updateMassObjects(MassObject arr[]) {
 
           if (arr[i].mass >= arr[j].mass) {
             arr[i].mass += arr[j].mass;
-            arr[i].vel = Vector2Scale(momentum, 1/arr[i].mass);
+            arr[i].vel = Vector2Scale(momentum, (1/arr[i].mass));
             deleteMassObject(j, arr);
           }
 
           else {
             arr[j].mass += arr[i].mass;
-            arr[j].vel = Vector2Scale(momentum, 1/arr[i].mass);
+            arr[j].vel = Vector2Scale(momentum, (1/arr[j].mass));
             deleteMassObject(i, arr);
           }
-          break;
         }
 
-        if (arr[i].can_move == 1) {
-          double distSq = dist*dist;
-          double F = G * (arr[i].mass * arr[j].mass) / distSq;
-          F /= arr[i].mass;
+        double distSq = dist*dist;
+        // double F = G * (arr[i].mass * arr[j].mass) / distSq;
+        double F = ((G*arr[j].mass) / distSq);
 
-          Vector2 direction_vector = (Vector2Subtract(arr[j].pos, arr[i].pos));
-          direction_vector = Vector2Normalize(direction_vector);
-          direction_vector.x = F * direction_vector.x;
-          direction_vector.y = F * direction_vector.y;
-          
-          arr[i].vel = Vector2Add(arr[i].vel, direction_vector);
-        }
+        Vector2 direction_vector = Vector2Normalize(Vector2Subtract(arr[j].pos, arr[i].pos));
+        direction_vector = Vector2Scale(direction_vector, F);
+        arr[i].vel = Vector2Add(arr[i].vel, direction_vector);  
       }
     }
     arr[i].pos = Vector2Add(arr[i].pos, arr[i].vel);
     arr[i].radius = sqrt(arr[i].mass/PI);
   }
-
-
 }
 
 

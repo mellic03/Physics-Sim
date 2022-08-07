@@ -1,11 +1,12 @@
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
 #include <raylib.h>
 
 #define G 1 // gravitational constant
 #define MAX_FORCE 2
-#define MAX_MASS_OBJECTS 64
+#define MAX_MASS_OBJECTS 1024
 
-#ifndef PHYSICS_H
-#define PHYSICS_H
 
 typedef struct MassObject {
   Vector2 pos, vel, acc;
@@ -16,8 +17,6 @@ typedef struct MassObject {
 MassObject createMassObject(Vector2 pos, Vector2 vel, double mass);
 
 void attract(MassObject *atttracted, MassObject attractor);
-
-void update_position(MassObject *object);
 
 #endif /* PHYSICS_H */
 

@@ -1,6 +1,6 @@
-#include "physics.h"
 #ifndef PHYSTOOLS_H
 #define PHYSTOOLS_H
+#include "physics.h"
 
 void setDefaultMassObjectArray(MassObject arr[]);
 

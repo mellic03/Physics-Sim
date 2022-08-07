@@ -1,9 +1,9 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdlib.h>
+
 #include "physics.h"
 #include "gamemath.h"
-#include <stdio.h>
 
 
 MassObject createMassObject(Vector2 pos, Vector2 vel, double mass) {
@@ -26,12 +26,5 @@ void attract(MassObject *attracted, MassObject attractor) {
   direction_vector.x *= -0.01 * F;
   direction_vector.y *= -0.01 * F;
 
-
   attracted->vel = Vector2Add(attracted->vel, direction_vector);
-}
-
-
-void update_position(MassObject *object) {
-  object->vel = Vector2Add(object->vel, object->acc); // Add accleration to velocity
-  object->pos = Vector2Add(object->pos, object->vel); // Add velocity to position
 }
