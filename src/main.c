@@ -10,8 +10,8 @@
 #include "physics/physics.h"
 #include "ui/ui.h"
 
-int screen_width = 1280;
-int screen_height = 720;
+int screen_width = 2560;
+int screen_height = 1440;
 
 int main() {
   // Initialization
@@ -26,9 +26,7 @@ int main() {
   camera.rotation = 0.0f;
 
   init_physics();
-  mass_objects[0] = createMassObject((Vector2){1, 0}, (Vector2){0, 0}, 5000);
-  mass_objects[0].can_move = 0;
-
+  int game_paused = 0;
 
   // Main game loop
   while (!WindowShouldClose()) {
@@ -37,14 +35,8 @@ int main() {
 
     player_control(&camera);
  
-    // if (game_paused == 0)
-    //   updateMassObjects(mass_objects);
-    // if (IsKeyPressed(KEY_SPACE))
-    //   game_paused = 1;
-    // if (IsKeyReleased(KEY_SPACE))
-    //   game_paused = 0;
-
     updateMassObjects(mass_objects);
+
 
 
     // Draw
@@ -64,8 +56,6 @@ int main() {
       //-------------------------
       draw_tool_menu();
       //-------------------------
-
-
     EndDrawing();
     //----------------------------------------------------------------------------------
   }

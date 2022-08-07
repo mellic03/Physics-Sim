@@ -3,14 +3,14 @@
 
 #include <raylib.h>
 
-#define G 0.4 // gravitational constant
+#define G 5 // gravitational constant
 #define MAX_FORCE 2
-#define MAX_MASS_OBJECTS 1000000
+#define MAX_MASS_OBJECTS 4096
 
 extern int current_mass_object_count;
 
 typedef struct MassObject {
-  Vector2 pos, vel, acc;
+  Vector2 pos, vel;
   double mass, radius;
   int can_move;
 } MassObject;

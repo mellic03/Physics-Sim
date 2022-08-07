@@ -2,6 +2,7 @@
 #include "physics.h"
 #include <raymath.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "gamemath.h"
 
 
@@ -20,9 +21,8 @@ int push(MassObject obj, MassObject arr[]) {
 
 // Update the positions of all MassObjects.
 void updateMassObjects(MassObject arr[]) {
-  printf("%d objects\n", current_mass_object_count);
-  for (int i=0; i<current_mass_object_count; i++) {
-    for (int j=0; j<current_mass_object_count; j++) {
+  for (int i=0; i<MAX_MASS_OBJECTS; i++) {
+    for (int j=0; j<MAX_MASS_OBJECTS; j++) {
       if (i!=j && arr[i].mass!=0 && arr[j].mass!=0) {
 
         double dist = Vector2Distance(arr[i].pos, arr[j].pos);
@@ -49,13 +49,16 @@ void updateMassObjects(MassObject arr[]) {
           }
         }
 
-        double distSq = dist*dist;
-        // double F = G * (arr[i].mass * arr[j].mass) / distSq;
-        double F = ((G*arr[j].mass) / distSq);
+        else {
 
-        Vector2 direction_vector = Vector2Normalize(Vector2Subtract(arr[j].pos, arr[i].pos));
-        direction_vector = Vector2Scale(direction_vector, F);
-        arr[i].vel = Vector2Add(arr[i].vel, direction_vector);  
+          double distSq = dist*dist;
+          double F = ((G*arr[j].mass) / distSq);
+
+          Vector2 direction_vector = Vector2Normalize(Vector2Subtract(arr[j].pos, arr[i].pos));
+          direction_vector = Vector2Scale(direction_vector, F);
+          arr[i].vel = Vector2Add(arr[i].vel, direction_vector);  
+
+        }
       }
     }
     arr[i].pos = Vector2Add(arr[i].pos, arr[i].vel);
@@ -65,9 +68,9 @@ void updateMassObjects(MassObject arr[]) {
 
 
 void drawMassObjects(MassObject arr[]) {
-  for (int i=0; i<current_mass_object_count; i++) {
+  for (int i=0; i<MAX_MASS_OBJECTS; i++) {
     if (arr[i].mass != 0) {
-      DrawCircle(arr[i].pos.x, arr[i].pos.y, arr[i].radius, BLUE);
+      DrawCircle(arr[i].pos.x, arr[i].pos.y, arr[i].radius, (Color){arr[i].vel.x*arr[i].vel.x + arr[i].vel.y*arr[i].vel.y, 100, 200, 255});
     }
   }
 }

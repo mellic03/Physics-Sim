@@ -21,8 +21,8 @@ int button_is_clicked(Button btn) {
 void draw_tool_menu(void) {
   DrawRectangle(0, 0, 400, 100, WHITE);
   
-  Button single = {0, 25, 50, 50, BLUE}; // Single MassObject
-  Button array = {100, 25, 50, 50, GREEN}; // Matrix of MassObjects
+  Button single = {25, 25, 50, 50, BLUE}; // Single MassObject
+  Button array = {125, 25, 50, 50, GREEN}; // Matrix of MassObjects
 
   draw_button(single);
   if (button_is_clicked(single)) {

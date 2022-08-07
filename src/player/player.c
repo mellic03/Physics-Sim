@@ -26,7 +26,7 @@ void player_control(Camera2D *cam) {
   percievedMouse.x = (GetMouseX() + cam->target.x - cam->offset.x);// / cam->zoom;
   percievedMouse.y = (GetMouseY() + cam->target.y - cam->offset.y);// / cam->zoom;
 
-  DrawCircle(percievedMouse.x, percievedMouse.y, 20, RED);
+  // DrawCircle(percievedMouse.x, percievedMouse.y, 20, RED);
 
   if (GetMouseX() > 400 || GetMouseY() > 200) {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -48,20 +48,18 @@ void player_control(Camera2D *cam) {
           Vector2 dirVec = Vector2Subtract(mouseTrack, percievedMouse);
           dirVec.x /= 50;
           dirVec.y /= 50;
-          obj = createMassObject(mouseTrack, dirVec, 10);
-          push(obj, mass_objects);
+          push(createMassObject(mouseTrack, dirVec, 10), mass_objects);
         break;
 
         case (MATRIXMODE):
           for (int i=-10; i<10; i++) {
             for (int j=-10; j<10; j++) {
               Vector2 dirVec = Vector2Subtract(mouseTrack, percievedMouse);
-              dirVec.x /= 50;
-              dirVec.y /= 50;
+              dirVec.x /= 20;
+              dirVec.y /= 20;
               dirVec.x += rand()%4 - 2;
               dirVec.y += rand()%4 - 2;
-              obj = createMassObject((Vector2){mouseTrack.x + 50*i, mouseTrack.y + 50*j}, dirVec, 10);
-              push(obj, mass_objects);
+              push(createMassObject((Vector2){mouseTrack.x + 50*i + rand()%500-250, mouseTrack.y + 50*j + rand()%500-250}, dirVec, 8), mass_objects);
             }
           }
         break;

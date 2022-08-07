@@ -7,7 +7,7 @@
 #include "gamemath.h"
 
 MassObject mass_objects[MAX_MASS_OBJECTS];
-int current_mass_object_count = 122;
+int current_mass_object_count = 0;
 
 MassObject createMassObject(Vector2 pos, Vector2 vel, double mass) {
   MassObject obj;
@@ -23,7 +23,6 @@ MassObject createMassObject(Vector2 pos, Vector2 vel, double mass) {
 void deleteMassObject(int index, MassObject arr[]) {
   arr[index].pos = (Vector2){0, 0};
   arr[index].vel = (Vector2){0, 0};
-  arr[index].acc = (Vector2){0, 0};
   arr[index].mass = 0;
   arr[index].radius = 0;
   arr[index].can_move = 0;
@@ -48,7 +47,6 @@ int init_physics(void) {
   for (int i=0; i<MAX_MASS_OBJECTS; i++) {
     mass_objects[i].pos = (Vector2){0, 0};
     mass_objects[i].vel = (Vector2){0, 0};
-    mass_objects[i].acc = (Vector2){0, 0};
     mass_objects[i].mass = 0;
     mass_objects[i].radius = 0;
     mass_objects[i].can_move = 0;
