@@ -2,32 +2,34 @@
 #include <raymath.h>
 #include <stdlib.h>
 #include "physics.h"
+#include "gamemath.h"
+#include <stdio.h>
 
-#define G 9.807 // gravitational acceleration on earth.
-#define MAX_FORCE 2
 
-// Returns an acceleration vector from attracted->attractor
-Vector2 attract(MassObject attracted, MassObject attractor) {
+MassObject createMassObject(Vector2 pos, Vector2 vel, double mass) {
+  MassObject obj;
+  obj.pos = pos;
+  obj.vel = vel;
+  obj.mass = mass;
+  obj.radius = sqrt(obj.mass / PI);
+  obj.can_move = 1;
+  return obj;
+}
+
+// Updates velocity and position of a MassObject
+void attract(MassObject *attracted, MassObject attractor) {
   
-  // F is the amount of force exerted on each object in the direction of the other object.
-  double distSq = pow(Vector2Distance(attracted.pos, attractor.pos), 2);
-  double F = G * ((attracted.mass*attractor.mass) / distSq);
-  //F = (F > MAX_FORCE) ? MAX_FORCE : F;
+  double distSq = Vector2Distance(attracted->pos, attractor.pos);
+  distSq *= distSq;
+  double F = ((attracted->mass*attractor.mass) / distSq);
+  Vector2 direction_vector = Vector2Normalize(Vector2Subtract(attracted->pos, attractor.pos));
+  direction_vector.x *= -0.01 * F;
+  direction_vector.y *= -0.01 * F;
 
-  Vector2 direction_vector = Vector2Normalize(Vector2Subtract(attracted.pos, attractor.pos));
 
-  direction_vector.x *= -F;
-  direction_vector.y *= -F;
-
-  return (direction_vector);
+  attracted->vel = Vector2Add(attracted->vel, direction_vector);
 }
 
-Vector2 attract_down(MassObject mo, int ground_y) {
-
-  Vector2 direction_vector = (Vector2){0, 0.03};
-
-  return (direction_vector);
-}
 
 void update_position(MassObject *object) {
   object->vel = Vector2Add(object->vel, object->acc); // Add accleration to velocity
