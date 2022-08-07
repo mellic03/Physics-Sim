@@ -7,6 +7,8 @@
 #define ARRAYMODE 1
 #define MATRIXMODE 2
 
+extern int tool_mode;
+
 typedef struct Button {
   int x, y;
   int w, h;

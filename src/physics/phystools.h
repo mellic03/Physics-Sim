@@ -2,9 +2,6 @@
 #define PHYSTOOLS_H
 #include "physics.h"
 
-void setDefaultMassObjectArray(MassObject arr[]);
-
-void deleteMassObject(int index, MassObject arr[]);
 
 int push(MassObject obj, MassObject arr[]);
 
