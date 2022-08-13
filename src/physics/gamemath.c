@@ -10,6 +10,14 @@ int fastpow(int base, int exponent) {
   return n;
 }
 
+int shitsqrt(double n) {
+  int a = 0;
+  while (a*a < n) {
+    a += 1;
+  }
+  return a;
+}
+
 Vector2 rotateVectorAboutPoint(Vector2 vec, Vector2 point) {
 
   double slope = (vec.y-point.y) / (vec.x-point.x);

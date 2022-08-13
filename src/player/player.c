@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "player.h"
 #include "../physics/phystools.h"
 #include "../physics/physics.h"
@@ -11,24 +12,31 @@ int mouse_down_flag = 0;
 Vector2 mouseTrack = {0, 0};
 Vector2 percievedMouse = {0, 0};
 
-void player_control(Camera2D *cam) {
+int spin_mode_radius = 750;
+bool is_following_MassObject = false;
+int index_to_follow = 0;
 
-  if (IsKeyDown(KEY_A)) { cam->target.x -= 5 / cam->zoom; }
-  if (IsKeyDown(KEY_D)) { cam->target.x += 5 / cam->zoom; }
-  if (IsKeyDown(KEY_W)) { cam->target.y -= 5 / cam->zoom; }
-  if (IsKeyDown(KEY_S)) { cam->target.y += 5 / cam->zoom; }
+
+void player_control(Camera2D *cam, Vector2 percievedMouse) {
+
+  if (is_following_MassObject) {
+    cam->target = mass_objects[index_to_follow].pos;
+    DrawRectangle(mass_objects[index_to_follow].pos.x, mass_objects[index_to_follow].pos.y, 20, 20, (Color){255, 0, 0, 2});
+  }
+
+  else {
+    if (IsKeyDown(KEY_A)) { cam->target.x -= 5 / cam->zoom; }
+    if (IsKeyDown(KEY_D)) { cam->target.x += 5 / cam->zoom; }
+    if (IsKeyDown(KEY_W)) { cam->target.y -= 5 / cam->zoom; }
+    if (IsKeyDown(KEY_S)) { cam->target.y += 5 / cam->zoom; }
+  }
+  if (IsKeyDown(KEY_R)) { is_following_MassObject = false; }
+  if (IsKeyDown(KEY_T)) { cam->target = (Vector2){0, 0}; }
+
   cam->zoom += 0.2 * cam->zoom * GetMouseWheelMove();
   cam->offset = (Vector2){GetScreenWidth()/2, GetScreenHeight()/2};
 
-  // percievedMouse.x = (GetMouseX() - cam->offset.x + cam->target.x) / cam->zoom;
-  // percievedMouse.y = (GetMouseY() - cam->offset.y + cam->target.y) / cam->zoom;
-
-  percievedMouse.x = (GetMouseX() + cam->target.x - cam->offset.x);// / cam->zoom;
-  percievedMouse.y = (GetMouseY() + cam->target.y - cam->offset.y);// / cam->zoom;
-
-  // DrawCircle(percievedMouse.x, percievedMouse.y, 20, RED);
-
-  if (GetMouseX() > 400 || GetMouseY() > 200) {
+  if (GetMouseX() > 400 || GetMouseY() > 500) {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
       if (mouse_down_flag == 0) {
         mouseTrack = percievedMouse;
@@ -48,7 +56,7 @@ void player_control(Camera2D *cam) {
           Vector2 dirVec = Vector2Subtract(mouseTrack, percievedMouse);
           dirVec.x /= 50;
           dirVec.y /= 50;
-          push(createMassObject(mouseTrack, dirVec, 10), mass_objects);
+          createMassObject(mouseTrack, dirVec, 10);
         break;
 
         case (MATRIXMODE):
@@ -59,7 +67,46 @@ void player_control(Camera2D *cam) {
               dirVec.y /= 20;
               dirVec.x += rand()%4 - 2;
               dirVec.y += rand()%4 - 2;
-              push(createMassObject((Vector2){mouseTrack.x + 50*i + rand()%500-250, mouseTrack.y + 50*j + rand()%500-250}, dirVec, 8), mass_objects);
+
+              createMassObject(
+                (Vector2){
+                  mouseTrack.x + 50*i + rand()%500-250,
+                  mouseTrack.y + 50*j + rand()%500-250
+                },
+                dirVec,
+                rand()%15 + 5
+              );
+            }
+          }
+        break;
+
+        case (SPINMODE):
+          for (int i=-spin_mode_radius; i<spin_mode_radius; i+=35) {
+            for (int j=-spin_mode_radius; j<spin_mode_radius; j+=35) {
+              Vector2 a = (Vector2){percievedMouse.x + i, percievedMouse.y + j};
+              Vector2 b = Vector2Subtract(a, percievedMouse);
+              float dist_from_mouse = Vector2Distance(percievedMouse, a);
+              Vector2 dirVec = (Vector2){b.y, -b.x};
+              dirVec = Vector2Normalize(dirVec);
+              dirVec = Vector2Scale(dirVec, (int)(shitsqrt((G*10000) /dist_from_mouse)));
+
+              createMassObject(
+                (Vector2){
+                  mouseTrack.x + i,
+                  mouseTrack.y + j
+                },
+                dirVec,
+                0.1
+              );
+            }
+          }
+        break;
+
+        case (FOLLOWMODE):
+          for (int i=0; i<MAX_MASS_OBJECTS; i++) {
+            if (Vector2Distance(percievedMouse, mass_objects[i].pos) < mass_objects[i].radius) {
+              is_following_MassObject = true;
+              index_to_follow = i;
             }
           }
         break;
@@ -68,5 +115,10 @@ void player_control(Camera2D *cam) {
   }
 
 
+}
+
+void player_ui(void) {
+  if (is_following_MassObject)
+  draw_massobject_info_window(index_to_follow);
 }
 
