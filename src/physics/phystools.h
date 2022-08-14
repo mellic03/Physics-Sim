@@ -3,10 +3,10 @@
 #include "physics.h"
 
 void updateMassObjects(MassObject arr[]);
-
-void drawMassObjects(MassObject arr[]);
-
+void drawMassObjects(void);
 void create_massobject_ring(Vector2 pos, float mass, float r);
-void sort_mass_objects(MassObject arr[]);
+
+void draw_gel_particles(void);
+void update_gel_particles(void);
 
 #endif /* PHYSTOOLS_H */

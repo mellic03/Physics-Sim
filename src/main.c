@@ -10,8 +10,8 @@
 #include "physics/physics.h"
 #include "ui/ui.h"
 
-int screen_width = 2560;
-int screen_height = 1440;
+int screen_width = 1280;
+int screen_height = 720;
 
 int main() {
 
@@ -29,10 +29,6 @@ int main() {
   Vector2 percievedMouse;
 
   init_physics();
-  // mass_objects[0].mass = 100000;
-  // mass_objects[0].radius = shitsqrt(mass_objects[0].mass / PI);
-  // mass_objects[0].can_move = 1;
-
 
   int game_paused = 0;
 
@@ -41,8 +37,10 @@ int main() {
 
     // Update variables here
 
-    if (game_paused == 0)
+    if (game_paused == 0) {
       updateMassObjects(mass_objects);
+      update_gel_particles();
+    }
     if (IsKeyDown(KEY_SPACE))
       game_paused = 1;
     else
@@ -50,13 +48,17 @@ int main() {
 
 
     if (IsKeyDown(KEY_F))
-      SetTargetFPS(1000);
+      SetTargetFPS(100000);
     if (IsKeyReleased(KEY_F))
       SetTargetFPS(60);
 
-    percievedMouse = GetScreenToWorld2D(GetMousePosition(), camera);
+    if (IsKeyDown(KEY_UP)) {
+      for (int i=0; i<gel_particle_count; i++) {
+        gel_particles[i].pos.y += 1;
+      }
+    }
 
-    // printf("Camera pos: %0.1lf %0.1lf\n", camera.target.x, camera.target.y);
+    percievedMouse = GetScreenToWorld2D(GetMousePosition(), camera);
 
     // Draw
     //----------------------------------------------------------------------------------
@@ -64,9 +66,10 @@ int main() {
       BeginMode2D(camera);
       ClearBackground(BLACK);
       
-
       player_control(&camera, percievedMouse);
-      drawMassObjects(mass_objects);
+
+      drawMassObjects();
+      draw_gel_particles();
 
       EndMode2D();
       // Handle UI here

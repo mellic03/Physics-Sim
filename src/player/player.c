@@ -12,7 +12,6 @@ int mouse_down_flag = 0;
 Vector2 mouseTrack = {0, 0};
 Vector2 percievedMouse = {0, 0};
 
-int spin_mode_radius = 750;
 bool is_following_MassObject = false;
 int index_to_follow = 0;
 
@@ -36,14 +35,23 @@ void player_control(Camera2D *cam, Vector2 percievedMouse) {
   cam->zoom += 0.2 * cam->zoom * GetMouseWheelMove();
   cam->offset = (Vector2){GetScreenWidth()/2, GetScreenHeight()/2};
 
-  if (GetMouseX() > 400 || GetMouseY() > 500) {
+  if (GetMouseX() > 400 || GetMouseY() > 100) {
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
       if (mouse_down_flag == 0) {
         mouseTrack = percievedMouse;
         mouse_down_flag = 1;
       }
       Vector2 test = rotateVectorAboutPoint(percievedMouse, mouseTrack);
-      DrawLine(mouseTrack.x, mouseTrack.y, test.x, test.y, BLUE);
+      // DrawLine(mouseTrack.x, mouseTrack.y, test.x, test.y, BLUE);
+    
+
+      switch (tool_mode) {
+        case (GELMODE):
+          Vector2 pos = percievedMouse;
+          create_gel_particle(pos, (Vector2){0, 0});
+        break;
+      }
+
     }
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
@@ -80,27 +88,7 @@ void player_control(Camera2D *cam, Vector2 percievedMouse) {
           }
         break;
 
-        case (SPINMODE):
-          for (int i=-spin_mode_radius; i<spin_mode_radius; i+=35) {
-            for (int j=-spin_mode_radius; j<spin_mode_radius; j+=35) {
-              Vector2 a = (Vector2){percievedMouse.x + i, percievedMouse.y + j};
-              Vector2 b = Vector2Subtract(a, percievedMouse);
-              float dist_from_mouse = Vector2Distance(percievedMouse, a);
-              Vector2 dirVec = (Vector2){b.y, -b.x};
-              dirVec = Vector2Normalize(dirVec);
-              dirVec = Vector2Scale(dirVec, (int)(shitsqrt((G*10000) /dist_from_mouse)));
 
-              createMassObject(
-                (Vector2){
-                  mouseTrack.x + i,
-                  mouseTrack.y + j
-                },
-                dirVec,
-                0.1
-              );
-            }
-          }
-        break;
 
         case (FOLLOWMODE):
           for (int i=0; i<MAX_MASS_OBJECTS; i++) {

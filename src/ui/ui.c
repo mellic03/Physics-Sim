@@ -28,7 +28,7 @@ void draw_tool_menu(void) {
 
   Button single = {25, 25, 50, 50, "single", BLUE}; // Single MassObject
   Button matrix = {125, 25, 50, 50, "matrix", GREEN}; // Matrix of MassObjects
-  Button spin = {225, 25, 50, 50, "spin", YELLOW};
+  Button gel = {225, 25, 50, 50, "gel", YELLOW};
   Button follow = {325, 25, 50, 50, "follow", VIOLET};
 
   draw_button(single, SINGLEMODE);
@@ -41,9 +41,9 @@ void draw_tool_menu(void) {
     tool_mode = MATRIXMODE;
   }
   
-  draw_button(spin, SPINMODE);
-  if (button_is_clicked(spin)) {
-    tool_mode = SPINMODE;
+  draw_button(gel, GELMODE);
+  if (button_is_clicked(gel)) {
+    tool_mode = GELMODE;
   }
 
   draw_button(follow, FOLLOWMODE);
@@ -56,7 +56,7 @@ void draw_massobject_info_window(int i) {
 
   DrawRectangle(0, 100, 400, 400, GRAY);
   
-  DrawText(TextFormat("\nobjects: %d\nmass: %0.1f\nradius: %0.1f", current_mass_object_count, mass_objects[i].mass, mass_objects[i].radius), 25, 100, 24, BLACK);
+  DrawText(TextFormat("\nobjects: %d\nmass: %0.1f\nradius: %0.1f", mass_object_count, mass_objects[i].mass, mass_objects[i].radius), 25, 100, 24, BLACK);
 
   Button create_ring = {25, 250, 50, 50, "create ring", BLUE};
   draw_button(create_ring, SPINMODE);

@@ -3,7 +3,7 @@
 
 #include <raymath.h>
 
-int fastpow(int base, int exponent); 
+int intpow(int base, int exponent); 
 int shitsqrt(double n);
 Vector2 rotateVectorAboutPoint(Vector2 vec, Vector2 point);
 

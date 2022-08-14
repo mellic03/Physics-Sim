@@ -1,3 +1,5 @@
 /.vscode
 
 main
+/raylib-master
+build-win.sh
