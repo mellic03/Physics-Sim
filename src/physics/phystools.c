@@ -59,9 +59,10 @@ void create_massobject_ring(Vector2 pos, float mass, float r) {
 }
 
 
-int wall_left = -500;
-int wall_right = 1000;
-int wall_bottom = 500;
+int wall_left =  -1000;
+int wall_right =  1000;
+int wall_top =   0;
+int wall_bottom = 1000;
 
 void update_gel_particles(void) {
 
@@ -73,27 +74,41 @@ void update_gel_particles(void) {
       }
     }
 
-    // Gravity
+    if (Vector2Length(gel_particles[i].vel) > VLIQUID_MAX_VEL) {
+      gel_particles[i].vel = Vector2Scale(Vector2Normalize(gel_particles[i].vel), VLIQUID_MAX_VEL);
+    }
+
+    gel_particles[i].vel = Vector2Scale(gel_particles[i].vel, 0.95);
+    gel_particles[i].pos = Vector2Add(gel_particles[i].pos, gel_particles[i].vel);
+
+    // // Gravity
     // gel_particles[i].pos.y += 1;
 
     // Keep in bounds
-    // if (gel_particles[i].pos.x > wall_right)
-    //   gel_particles[i].pos.x = wall_right-1;
-    // else if (gel_particles[i].pos.x < wall_left)
-    //   gel_particles[i].pos.x = wall_left+1;
-    // if (gel_particles[i].pos.y > wall_bottom)
-    //   gel_particles[i].pos.y = wall_bottom-1; 
+    if (gel_particles[i].pos.x > wall_right)
+      gel_particles[i].pos.x = wall_right-1;
+    else if (gel_particles[i].pos.x < wall_left)
+      gel_particles[i].pos.x = wall_left+1;
+    if (gel_particles[i].pos.y > wall_bottom)
+      gel_particles[i].pos.y = wall_bottom-1;
+    else if (gel_particles[i].pos.y < wall_top)
+      gel_particles[i].pos.y = wall_top+1;
   }
 }
 
 void draw_gel_particles(void) {
-  // DrawRectangle(wall_left, -5000, -wall_left+wall_right, 5000 + wall_bottom, BLACK);
+  // Draw bounding box
+  DrawLine(wall_left, wall_top, wall_right, wall_top, WHITE);
+  DrawLine(wall_right, wall_top, wall_right, wall_bottom, WHITE);
+  DrawLine(wall_right, wall_bottom, wall_left, wall_bottom, WHITE);
+  DrawLine(wall_left, wall_bottom, wall_left, wall_top, WHITE);
+
   for (int i=0; i<gel_particle_count; i++) {
-    // DrawPixelV(gel_particles[i].pos, (Color){200, 200, 200, 255});
+    DrawCircleV(gel_particles[i].pos, 5, (Color){200, 200, 200, 255});
     for (int j=0; j< gel_particle_count; j++) {
       float dist = Vector2Distance(gel_particles[i].pos, gel_particles[j].pos);
-      if (dist < VLIQUID_PUSH_RADIUS + 50) {
-        DrawLineV(gel_particles[i].pos, gel_particles[j].pos, (Color){0, 150, 255, 255-(1.7*dist)});
+      if (dist <= 1.2*VLIQUID_PUSH_RADIUS) {
+        DrawLineV(gel_particles[i].pos, gel_particles[j].pos, (Color){0, 150, 255, 255});
       }
     }
   }

@@ -41,14 +41,21 @@ void player_control(Camera2D *cam, Vector2 percievedMouse) {
         mouseTrack = percievedMouse;
         mouse_down_flag = 1;
       }
-      Vector2 test = rotateVectorAboutPoint(percievedMouse, mouseTrack);
+      // Vector2 test = rotateVectorAboutPoint(percievedMouse, mouseTrack);
       // DrawLine(mouseTrack.x, mouseTrack.y, test.x, test.y, BLUE);
-    
 
       switch (tool_mode) {
         case (GELMODE):
-          Vector2 pos = percievedMouse;
-          create_gel_particle(pos, (Vector2){0, 0});
+          create_gel_particle(percievedMouse, (Vector2){0, 0});
+        break;
+      }
+
+    }
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+      switch (tool_mode) {
+        case (GELMODE):
+          push_gel_particles(percievedMouse);
         break;
       }
 

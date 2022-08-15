@@ -101,20 +101,31 @@ void attract_gel(GelParticle *attracted, GelParticle attractor, int pull_radius,
   Vector2 dirVec = Vector2Subtract(attractor.pos, attracted->pos);
   dirVec = Vector2Normalize(dirVec);
   
-  // Attractive force
-  if (dist > push_radius && dist < pull_radius) {
-    float attractive_force = ((G*pull_force) / (dist + 1));
-    dirVec = Vector2Scale(dirVec, attractive_force);
-    attracted->pos = Vector2Add(attracted->pos, dirVec);
-  }
-
   // Repulsive force
-  else if (dist <= push_radius) {
-    float repulsive_force = -((G*push_force) / (dist + 1));
+  if (dist <= push_radius) {
+    float repulsive_force = -push_force / (dist + 1);
     dirVec = Vector2Scale(dirVec, repulsive_force);
     attracted->pos = Vector2Add(attracted->pos, dirVec);
   }
+  // Attractive force
+  else if (dist <= pull_radius) {
+    float attractive_force = pull_force / (dist*dist + 1);
+    attractive_force = (attractive_force > VLIQUID_MAX_VEL) ? VLIQUID_MAX_VEL : attractive_force;
+    dirVec = Vector2Scale(dirVec, attractive_force);
+    attracted->vel = Vector2Add(attracted->vel, dirVec);
+  }
 }
+
+void push_gel_particles(Vector2 mouse_pos) {
+  for (int i=0; i<gel_particle_count; i++) {
+    if (Vector2Distance(mouse_pos, gel_particles[i].pos) < PUSH_TOOL_RADIUS) {
+      Vector2 dirVec = Vector2Subtract(gel_particles[i].pos, mouse_pos);
+      dirVec = Vector2Scale(Vector2Normalize(dirVec), PUSH_TOOL_STRENGTH);
+      gel_particles[i].vel = Vector2Add(gel_particles[i].vel, dirVec);
+    }
+  }
+}
+
 //-----------------------------------------------------------------------------------------------
 
 

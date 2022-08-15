@@ -10,10 +10,18 @@
 #include "physics/physics.h"
 #include "ui/ui.h"
 
-int screen_width = 1280;
-int screen_height = 720;
+int screen_width = 2560;
+int screen_height = 1440;
 
 int main() {
+
+  // float n = 1;
+  // float rate = 0.4;
+  // for (int i=0; i<1000000; i++) {
+  //   n *= rate;
+  //   n += 1;
+  //   printf("%f\n", n);
+  // }
 
   // Initialization
   //--------------------------------------------------------------------------------------
