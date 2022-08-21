@@ -94,7 +94,7 @@ void delete_gel_particle(int index, GelParticle arr[]) {
   sort_gel_particles(gel_particles);
 }
 
-void attract_gel(GelParticle *attracted, GelParticle attractor, int pull_radius, int pull_force, int push_radius, int push_force) {
+void attract_gel(GelParticle *attracted, GelParticle attractor, float pull_radius, float pull_force, float push_radius, float push_force) {
 
   float dist = Vector2Distance(attracted->pos, attractor.pos);
 
@@ -105,12 +105,11 @@ void attract_gel(GelParticle *attracted, GelParticle attractor, int pull_radius,
   if (dist <= push_radius) {
     float repulsive_force = -push_force / (dist + 1);
     dirVec = Vector2Scale(dirVec, repulsive_force);
-    attracted->pos = Vector2Add(attracted->pos, dirVec);
+    attracted->vel = Vector2Add(attracted->vel, dirVec);
   }
   // Attractive force
-  else if (dist <= pull_radius) {
+  if (dist <= pull_radius) {
     float attractive_force = pull_force / (dist*dist + 1);
-    attractive_force = (attractive_force > VLIQUID_MAX_VEL) ? VLIQUID_MAX_VEL : attractive_force;
     dirVec = Vector2Scale(dirVec, attractive_force);
     attracted->vel = Vector2Add(attracted->vel, dirVec);
   }
@@ -127,8 +126,6 @@ void push_gel_particles(Vector2 mouse_pos) {
 }
 
 //-----------------------------------------------------------------------------------------------
-
-
 
 
 int init_physics(void) {

@@ -4,7 +4,7 @@
 #include "../physics/physics.h"
 #include "../physics/phystools.h"
 
-int tool_mode = 0;
+int tool_mode = 5;
 
 void draw_button(Button btn, int mode) {
   DrawRectangle(btn.x, btn.y, btn.w, btn.h, btn.color);

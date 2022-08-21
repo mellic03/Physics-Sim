@@ -12,19 +12,18 @@
 
 // GEL PARTICLES
 //---------------------------------------
-#define MAX_GEL_PARTICLES 4096
+#define MAX_GEL_PARTICLES 1024
 
 // TOOLS
-#define PUSH_TOOL_STRENGTH 5
-#define PUSH_TOOL_RADIUS 300
+#define PUSH_TOOL_STRENGTH 0.2
+#define PUSH_TOOL_RADIUS 150
 
 // VISCOUS LIQUID
 #define VLIQUID_PARTICLE_RADIUS 5
-#define VLIQUID_PUSH_RADIUS 55
-#define VLIQUID_PULL_RADIUS 555
-#define VLIQUID_PUSH_STRENGTH 55
-#define VLIQUID_PULL_STRENGTH 15
-#define VLIQUID_MAX_VEL 50
+#define VLIQUID_PUSH_RADIUS 40
+#define VLIQUID_PULL_RADIUS 150
+#define VLIQUID_PUSH_STRENGTH 5
+#define VLIQUID_PULL_STRENGTH 1
 //---------------------------------------
 
 typedef struct MassObject {
@@ -57,7 +56,7 @@ extern GelParticle gel_particles[MAX_GEL_PARTICLES];
 void sort_gel_particles(GelParticle arr[]);
 void create_gel_particle(Vector2 pos, Vector2 vel);
 void delete_gel_particle(int index, GelParticle arr[]);
-void attract_gel(GelParticle *attracted, GelParticle attractor, int pull_radius, int pull_force, int push_radius, int push_force);
+void attract_gel(GelParticle *attracted, GelParticle attractor, float pull_radius, float pull_force, float push_radius, float push_force);
 void push_gel_particles(Vector2 pos);
 
 //-----------------------------------------------------------------------------------------------

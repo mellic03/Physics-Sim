@@ -58,11 +58,10 @@ void create_massobject_ring(Vector2 pos, float mass, float r) {
   }
 }
 
-
-int wall_left =  -1000;
-int wall_right =  1000;
-int wall_top =   0;
-int wall_bottom = 1000;
+int wall_left   = -700;
+int wall_right  =  700;
+int wall_top    = -700;
+int wall_bottom =  700;
 
 void update_gel_particles(void) {
 
@@ -74,15 +73,12 @@ void update_gel_particles(void) {
       }
     }
 
-    if (Vector2Length(gel_particles[i].vel) > VLIQUID_MAX_VEL) {
-      gel_particles[i].vel = Vector2Scale(Vector2Normalize(gel_particles[i].vel), VLIQUID_MAX_VEL);
-    }
 
-    gel_particles[i].vel = Vector2Scale(gel_particles[i].vel, 0.95);
+    gel_particles[i].vel = Vector2Scale(gel_particles[i].vel, 0.98);
     gel_particles[i].pos = Vector2Add(gel_particles[i].pos, gel_particles[i].vel);
 
-    // // Gravity
-    // gel_particles[i].pos.y += 1;
+    // Gravity
+    // gel_particles[i].vel.y += 0.001;
 
     // Keep in bounds
     if (gel_particles[i].pos.x > wall_right)
@@ -107,7 +103,7 @@ void draw_gel_particles(void) {
     DrawCircleV(gel_particles[i].pos, 5, (Color){200, 200, 200, 255});
     for (int j=0; j< gel_particle_count; j++) {
       float dist = Vector2Distance(gel_particles[i].pos, gel_particles[j].pos);
-      if (dist <= 1.2*VLIQUID_PUSH_RADIUS) {
+      if (dist <= 1.5*VLIQUID_PUSH_RADIUS) {
         DrawLineV(gel_particles[i].pos, gel_particles[j].pos, (Color){0, 150, 255, 255});
       }
     }
